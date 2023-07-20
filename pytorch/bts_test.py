@@ -83,16 +83,17 @@ def get_num_lines(file_path):
 
 def test(params):
     """Test function."""
+    print(args.data_path)
     args.mode = 'test'
     dataloader = BtsDataLoader(args, 'test')
     
     model = BtsModel(params=args)
     model = torch.nn.DataParallel(model)
     
-    checkpoint = torch.load(args.checkpoint_path)
+    checkpoint = torch.load(args.checkpoint_path, map_location=torch.device('cpu'))
     model.load_state_dict(checkpoint['model'])
     model.eval()
-    model.cuda()
+    #model.cuda()
 
     num_params = sum([np.prod(p.size()) for p in model.parameters()])
     print("Total number of parameters: {}".format(num_params))
@@ -113,8 +114,8 @@ def test(params):
     start_time = time.time()
     with torch.no_grad():
         for _, sample in enumerate(tqdm(dataloader.data)):
-            image = Variable(sample['image'].cuda())
-            focal = Variable(sample['focal'].cuda())
+            image = Variable(sample['image'])#.cuda())
+            focal = Variable(sample['focal'])#.cuda())
             # Predict
             lpg8x8, lpg4x4, lpg2x2, reduc1x1, depth_est = model(image, focal)
             pred_depths.append(depth_est.cpu().numpy().squeeze())

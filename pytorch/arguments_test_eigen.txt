@@ -1,5 +1,5 @@
 --encoder densenet161_bts
---data_path ../../dataset/kitti_dataset/
+--data_path /Users/lewishickley/BBK/MscThesis/data/kitti_data
 --dataset kitti
 --filenames_file ../train_test_inputs/eigen_test_files_with_gt.txt
 --model_name bts_eigen_v2_pytorch_densenet161
